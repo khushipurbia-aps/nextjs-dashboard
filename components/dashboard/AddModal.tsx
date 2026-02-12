@@ -11,11 +11,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-import { addBook } from "@/app/store/bookSlice"
+// import { addBook } from "@/app/store/bookSlice"
 import { updateBook } from "@/app/store/bookSlice"
 import { useEffect } from "react";
 import { useSelector } from "react-redux"
 import { RootState } from "@/app/store/store";
+import { addBookAsync } from "@/app/store/bookSlice"
+import { AppDispatch } from "@/app/store/store"
 
 interface AddModalProps {
     open: boolean
@@ -24,9 +26,14 @@ interface AddModalProps {
 }
 
 export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps) {
-    const bookToEdit = useSelector((state: RootState) =>
-        bookToEditId !== null ? state.books.booksList.find(b => b.id === bookToEditId) : null
-    );
+    const bookToEdit = useSelector((state: RootState) => {
+    if (!bookToEditId) return null;
+
+    return state.books.booksList?.find(
+        (b) => b?.id === bookToEditId
+    ) || null;
+});
+
 
     const [bookName, setBookName] = useState("");
     const [author, setAuthor] = useState("");
@@ -44,30 +51,40 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
         }
     }, [bookToEdit]);
 
-
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>();
     const isFormValid = bookName && author && publishedOn
 
+    // const handleAdd = () => {
+    //     if (!isFormValid) return;
+    //     if (bookToEdit) {
+    //         dispatch(updateBook({
+    //             id: bookToEdit.id,
+    //             bookName,
+    //             author,
+    //             publishedOn
+    //         }));
+    //     }
+    //     else dispatch(addBook({
+    //         bookName,
+    //         author,
+    //         publishedOn
+    //     }));
+    //     setBookName("");
+    //     setAuthor("");
+    //     setPublishedOn("");
+    //     setOpen(false);
+    // }
+
     const handleAdd = () => {
-        if (!isFormValid) return;
-        if (bookToEdit) {
-            dispatch(updateBook({
-                id: bookToEdit.id,
+        dispatch(
+            addBookAsync({
                 bookName,
                 author,
-                publishedOn
-            }));
-        }
-        else dispatch(addBook({
-            bookName,
-            author,
-            publishedOn
-        }));
-        setBookName("");
-        setAuthor("");
-        setPublishedOn("");
-        setOpen(false);
-    }
+                publishedOn,
+            })
+        );
+        setOpen(false)
+    };
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

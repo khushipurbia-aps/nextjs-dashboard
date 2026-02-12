@@ -11,36 +11,38 @@ import Deletemodal from "./DeleteModal";
 import Addmodal from "./AddModal";
 import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store/store";
+import { useSelector, useDispatch } from "react-redux";
 import { Edit2 } from "lucide-react";
-
-interface BookType {
-    id: number;
-    bookName: string;
-    author: string;
-    publishedOn: string;
-}
-
+import { RootState, AppDispatch } from "@/app/store/store";
+import { fetchBooks } from "@/app/store/bookSlice";
 
 
 export default function BooksTable() {
     const [open, setOpen] = useState(false)
-
     const [bookToEditId, setBookToEditId] = useState<number | null>(null);
 
-    
     // const books = useSelector((state: RootState) => state.books.booksList)
 
-    const [books, setBooks] = useState<BookType[]>([]);
-    useEffect(() => {
-        const fetchBooks = async () => {
-                const res = await fetch("/api/books");
-                const data: BookType[] = await res.json();
-                setBooks(data);
-        };
-        fetchBooks();
-    }, []);
+    // const [books, setBooks] = useState<BookType[]>([]);
+    // useEffect(() => {
+    //     const fetchBooks = async () => {
+    //         const res = await fetch("/api/books");
+    //         const data: BookType[] = await res.json();
+    //         setBooks(data);
+    //     };
+    //     fetchBooks();
+    // }, []);
+
+
+    const dispatch = useDispatch<AppDispatch>();
+
+const books = useSelector(
+    (state: RootState) => state.books.booksList
+);
+
+useEffect(() => {
+    dispatch(fetchBooks());
+}, [dispatch]);
 
 
     return (
