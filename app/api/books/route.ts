@@ -11,8 +11,35 @@ export async function POST(request: Request) {
     id: Date.now(),
     ...body,
   };
-
   books.push(newBook);
+  return Response.json({ book: newBook }, { status: 201 });
+}
 
-  return Response.json({book: newBook}, { status: 201 });
+export async function DELETE(request: Request) {
+  const body = await request.json();
+  const { id } = body;
+
+  // books = books.filter((b)=> b.id!=id)
+  const index = books.findIndex((b) => b.id == id);
+  if (index != -1) {
+    books.splice(index, 1);
+  }
+
+  return Response.json({ id })
+}
+
+export async function PUT(request: Request) {
+  const body = await request.json();
+  const { id, bookName, author, publishedOn } = body;
+  const index = books.findIndex((b) => b.id == id);
+  if (index != -1) {
+    books[index] = {
+      id,
+      bookName,
+      author,
+      publishedOn
+    }
+  }
+  return Response.json({ book: books[index] })
+
 }

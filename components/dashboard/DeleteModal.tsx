@@ -14,16 +14,20 @@ import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { deleteBook } from "@/app/store/bookSlice";
-
+import { AppDispatch } from "@/app/store/store";
+import { useRouter } from "next/navigation";
 export default function Deletemodal({ id }: { id: number }) {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
+    const router = useRouter();
     const handleDelete = () => {
         dispatch(deleteBook(id))
+        router.push("/dashboard");
     }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="mr-4">
+                <Button className="mr-4" onClick={(e) => e.stopPropagation()}>
                     <Trash2 />
                 </Button>
             </DialogTrigger>

@@ -15,35 +15,42 @@ import { useSelector, useDispatch } from "react-redux";
 import { Edit2 } from "lucide-react";
 import { RootState, AppDispatch } from "@/app/store/store";
 import { fetchBooks } from "@/app/store/bookSlice";
+import { useRouter } from "next/navigation";
 
 
-export default function BooksTable() {
+// export default function BooksTable() {
+
+type Props = {
+    bookId?: number;
+};
+
+export default function BooksTable({ bookId }: Props) {
     const [open, setOpen] = useState(false)
     const [bookToEditId, setBookToEditId] = useState<number | null>(null);
 
-    // const books = useSelector((state: RootState) => state.books.booksList)
-
-    // const [books, setBooks] = useState<BookType[]>([]);
-    // useEffect(() => {
-    //     const fetchBooks = async () => {
-    //         const res = await fetch("/api/books");
-    //         const data: BookType[] = await res.json();
-    //         setBooks(data);
-    //     };
-    //     fetchBooks();
-    // }, []);
-
-
     const dispatch = useDispatch<AppDispatch>();
 
-const books = useSelector(
-    (state: RootState) => state.books.booksList
-);
+    // const books = useSelector(
+    //     (state: RootState) => state.books.booksList
+    // );
 
-useEffect(() => {
-    dispatch(fetchBooks());
-}, [dispatch]);
+    const allBooks = useSelector(
+        (state: RootState) => state.books.booksList
+    );
 
+    const books = bookId
+        ? allBooks.filter((b) => b.id === bookId)
+        : allBooks;
+
+
+    useEffect(() => {
+        dispatch(fetchBooks());
+    }, [dispatch]);
+
+    const router = useRouter();
+    const handleClick = (id: number) => {
+        router.push(`/dashboard/${id}`);
+    };
 
     return (
         <>
@@ -59,7 +66,13 @@ useEffect(() => {
                 </TableHeader>
                 <TableBody>
                     {books.map((book, index) => (
-                        <TableRow key={book.id}>
+                        <TableRow
+                            onClick={() => {
+                                if (!bookId) handleClick(book.id);
+                            }}
+                            key={book.id}
+                        > 
+
                             <TableCell>{index + 1}</TableCell>
                             <TableCell>{book.bookName}</TableCell>
                             <TableCell>{book.author}</TableCell>
@@ -67,7 +80,8 @@ useEffect(() => {
                             <TableCell>
                                 <Deletemodal id={book.id} />
                                 <Button
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.stopPropagation();
                                         setBookToEditId(book.id);
                                         setOpen(true);
                                     }}
@@ -81,7 +95,6 @@ useEffect(() => {
                 </TableBody>
             </Table >
             <Addmodal open={open} setOpen={setOpen} bookToEditId={bookToEditId} />
-
         </>
 
     );

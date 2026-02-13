@@ -11,12 +11,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
-// import { addBook } from "@/app/store/bookSlice"
 import { updateBook } from "@/app/store/bookSlice"
 import { useEffect } from "react";
 import { useSelector } from "react-redux"
 import { RootState } from "@/app/store/store";
-import { addBookAsync } from "@/app/store/bookSlice"
+import { addBook } from "@/app/store/bookSlice"
 import { AppDispatch } from "@/app/store/store"
 
 interface AddModalProps {
@@ -76,13 +75,24 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
     // }
 
     const handleAdd = () => {
-        dispatch(
-            addBookAsync({
+        if (bookToEdit) {
+            dispatch(updateBook({
+                id: bookToEdit.id,
+                bookName,
+                author,
+                publishedOn
+            }));
+        }
+        else dispatch(
+            addBook({
                 bookName,
                 author,
                 publishedOn,
             })
         );
+        setBookName("");
+        setAuthor("");
+        setPublishedOn("");
         setOpen(false)
     };
 

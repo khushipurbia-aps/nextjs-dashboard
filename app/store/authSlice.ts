@@ -5,7 +5,10 @@ type AuthState = {
 };
 
 const initialState: AuthState = {
-  username: null,
+  username:
+    typeof window !== "undefined"
+      ? localStorage.getItem("username")
+      : null
 };
 
 const authSlice = createSlice({
@@ -14,6 +17,7 @@ const authSlice = createSlice({
   reducers: {
     login: (state, action: PayloadAction<string>) => {
       state.username = action.payload.split("@")[0];
+      localStorage.setItem("username", state.username)
     },
   },
 });
