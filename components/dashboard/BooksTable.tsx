@@ -17,9 +17,6 @@ import { RootState, AppDispatch } from "@/app/store/store";
 import { fetchBooks } from "@/app/store/bookSlice";
 import { useRouter } from "next/navigation";
 
-
-// export default function BooksTable() {
-
 type Props = {
     bookId?: number;
 };
@@ -29,10 +26,6 @@ export default function BooksTable({ bookId }: Props) {
     const [bookToEditId, setBookToEditId] = useState<number | null>(null);
 
     const dispatch = useDispatch<AppDispatch>();
-
-    // const books = useSelector(
-    //     (state: RootState) => state.books.booksList
-    // );
 
     const allBooks = useSelector(
         (state: RootState) => state.books.booksList
@@ -51,7 +44,6 @@ export default function BooksTable({ bookId }: Props) {
     const handleClick = (id: number) => {
         router.push(`/dashboard/${id}`);
     };
-
     return (
         <>
             <Table>
@@ -60,6 +52,7 @@ export default function BooksTable({ bookId }: Props) {
                         <TableHead>ID</TableHead>
                         <TableHead>Book Name</TableHead>
                         <TableHead>Author</TableHead>
+                        <TableHead>Category</TableHead>
                         <TableHead>Published On</TableHead>
                         <TableHead>Action</TableHead>
                     </TableRow>
@@ -71,11 +64,14 @@ export default function BooksTable({ bookId }: Props) {
                                 if (!bookId) handleClick(book.id);
                             }}
                             key={book.id}
-                        > 
+                        >
 
                             <TableCell>{index + 1}</TableCell>
                             <TableCell>{book.bookName}</TableCell>
                             <TableCell>{book.author}</TableCell>
+                            <TableCell>
+                                {book.categories.join(", ")}
+                            </TableCell>
                             <TableCell> {new Date(book.publishedOn).toLocaleDateString("en-GB")}</TableCell>
                             <TableCell>
                                 <Deletemodal id={book.id} />

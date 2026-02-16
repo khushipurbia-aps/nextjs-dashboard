@@ -17,6 +17,7 @@ export default function Login() {
     const isEmailValid = /\S+@\S+\.\S+/.test(email);
     const isFormValid = email!="" && password!="" && isEmailValid
     const handleLogin = () => {
+        document.cookie = `user=${email}; path=/`;
         dispatch(login(email));
         router.push("/dashboard");
     }

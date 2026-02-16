@@ -17,6 +17,20 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/app/store/store";
 import { addBook } from "@/app/store/bookSlice"
 import { AppDispatch } from "@/app/store/store"
+import { DayPicker } from "react-day-picker"
+import "react-day-picker/style.css";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "lucide-react";
+import Select from "react-select";
+
+const categoryOptions = [
+    { value: "Fiction", label: "Fiction" },
+    { value: "Non-Fiction", label: "Non-Fiction" },
+    { value: "Technology", label: "Technology" },
+    { value: "Self-Help", label: "Self-Help" },
+    { value: "Biography", label: "Biography" },
+    { value: "History", label: "History" },
+];
 
 interface AddModalProps {
     open: boolean
@@ -26,78 +40,90 @@ interface AddModalProps {
 
 export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps) {
     const bookToEdit = useSelector((state: RootState) => {
-    if (!bookToEditId) return null;
+        if (!bookToEditId) return null;
 
-    return state.books.booksList?.find(
-        (b) => b?.id === bookToEditId
-    ) || null;
-});
-
+        return state.books.booksList?.find(
+            (b) => b?.id === bookToEditId
+        ) || null;
+    });
 
     const [bookName, setBookName] = useState("");
     const [author, setAuthor] = useState("");
-    const [publishedOn, setPublishedOn] = useState("");
+    const [publishedOn, setPublishedOn] = useState<Date | undefined>();
+    const [categories, setCategories] = useState<any[]>([]);
+
+    const [calendarOpen, setcalendarOpen] = useState(false);
+
+
+    const resetForm = () => {
+        setBookName("");
+        setAuthor("");
+        setPublishedOn(undefined);
+        setCategories([])
+    };
 
     useEffect(() => {
         if (bookToEdit) {
             setBookName(bookToEdit.bookName);
             setAuthor(bookToEdit.author);
-            setPublishedOn(bookToEdit.publishedOn);
+            setPublishedOn(new Date(bookToEdit.publishedOn));
+            // if (bookToEdit.categories) {
+            setCategories(
+                bookToEdit.categories.map((c: string) => ({
+                    value: c,
+                    label: c,
+                }))
+            );
+            // }
         } else {
-            setBookName("");
-            setAuthor("");
-            setPublishedOn("");
+            resetForm();
         }
     }, [bookToEdit]);
 
     const dispatch = useDispatch<AppDispatch>();
-    const isFormValid = bookName && author && publishedOn
-
-    // const handleAdd = () => {
-    //     if (!isFormValid) return;
-    //     if (bookToEdit) {
-    //         dispatch(updateBook({
-    //             id: bookToEdit.id,
-    //             bookName,
-    //             author,
-    //             publishedOn
-    //         }));
-    //     }
-    //     else dispatch(addBook({
-    //         bookName,
-    //         author,
-    //         publishedOn
-    //     }));
-    //     setBookName("");
-    //     setAuthor("");
-    //     setPublishedOn("");
-    //     setOpen(false);
-    // }
+    const isFormValid = bookName && author && categories.length > 0 && publishedOn
 
     const handleAdd = () => {
+
+        const formattedCategories = categories.map((c) => c.value);
+
+
+        if (!publishedOn) return;
+        const formattedDate =
+            `${publishedOn.getFullYear()}-
+        ${String(publishedOn.getMonth() + 1).padStart(2, "0")}-
+        ${String(publishedOn.getDate()).padStart(2, "0")}`;
+
+
         if (bookToEdit) {
             dispatch(updateBook({
                 id: bookToEdit.id,
                 bookName,
                 author,
-                publishedOn
+                publishedOn: formattedDate,
+                categories: formattedCategories,
             }));
         }
         else dispatch(
             addBook({
                 bookName,
                 author,
-                publishedOn,
+                publishedOn: formattedDate,
+                categories: formattedCategories,
             })
         );
-        setBookName("");
-        setAuthor("");
-        setPublishedOn("");
-        setOpen(false)
+        setOpen(false);
+        resetForm();
     };
 
+
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={(value) => {
+            setOpen(value);
+            if (!value) {
+                resetForm();
+            }
+        }}>
             <DialogContent onInteractOutside={(e) => e.preventDefault()}>
                 <DialogHeader>
                     <DialogTitle>{bookToEdit ? "Edit Book" : "Add Book"}</DialogTitle>
@@ -121,12 +147,48 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
                             value={author}
                             onChange={(e) => { setAuthor(e.target.value) }} />
                     </div>
+
+                    <div className="grid gap-1">
+                        <Label>Book Category</Label>
+                        <Select
+                            isMulti
+                            options={categoryOptions}
+                            value={categories}
+                            onChange={(selected) => setCategories(selected as any[])}
+                        />
+                    </div>
+
                     <div className="grid gap-1">
                         <Label htmlFor="publishedOn">Published On</Label>
-                        <Input id="publishedOn"
+                        {/* <Input id="publishedOn"
                             type="date"
                             value={publishedOn}
-                            onChange={(e) => { setPublishedOn(e.target.value) }} />
+                            onChange={(e) => { setPublishedOn(e.target.value) }} /> */}
+
+                        <Popover open={calendarOpen} onOpenChange={setcalendarOpen} >
+                            <PopoverTrigger asChild >
+                                <Button variant="outline" className="justify-start font-normal">
+                                    <Calendar />
+                                    {publishedOn
+                                        ? publishedOn.toLocaleDateString("en-GB")
+                                        : "Pick a day"}
+                                </Button>
+                            </PopoverTrigger>
+
+                            <PopoverContent
+                                align="start"
+                                className="w-78 p-3">
+                                <DayPicker
+                                    animate
+                                    mode="single"
+                                    selected={publishedOn}
+                                    onSelect={(date) => {
+                                        setPublishedOn(date);
+                                        setcalendarOpen(false);
+                                    }}
+                                />
+                            </PopoverContent>
+                        </Popover>
                     </div>
                 </div>
                 <DialogFooter>

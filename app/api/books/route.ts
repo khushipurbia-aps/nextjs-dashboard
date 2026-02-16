@@ -30,14 +30,15 @@ export async function DELETE(request: Request) {
 
 export async function PUT(request: Request) {
   const body = await request.json();
-  const { id, bookName, author, publishedOn } = body;
+  const { id, bookName, author, categories, publishedOn } = body;
   const index = books.findIndex((b) => b.id == id);
   if (index != -1) {
     books[index] = {
       id,
       bookName,
       author,
-      publishedOn
+      publishedOn,
+      categories
     }
   }
   return Response.json({ book: books[index] })

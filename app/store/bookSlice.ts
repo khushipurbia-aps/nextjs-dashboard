@@ -5,6 +5,7 @@ export type Book = {
   bookName: string;
   author: string;
   publishedOn: string;
+  categories: string[];
 };
 
 type BooksState = {
