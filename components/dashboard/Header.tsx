@@ -3,11 +3,13 @@
 import Addmodal from "./AddModal";
 import Timer from "./Timer";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "@/app/store/store";
+import { AppDispatch, RootState } from "@/app/store/store";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { userCookie } from "@/app/store/authSlice";
 
 export default function Header() {
     const [open, setOpen] = useState(false);
@@ -18,11 +20,14 @@ export default function Header() {
 
     const router = useRouter();
 
-    const handleLogout = () => {
-        // Remove cookie
-        document.cookie = "user=; path=/; max-age=0";
+        const dispatch = useDispatch<AppDispatch>();
 
-        // Redirect to login page
+    useEffect(() => {
+            dispatch(userCookie());
+        }, []);
+
+    const handleLogout = () => {
+        document.cookie = "user=; max-age=0";
         router.push("/");
     };
 

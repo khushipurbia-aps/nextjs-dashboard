@@ -47,11 +47,15 @@ export default function Deletemodal({ id }: { id: number }) {
                         <Button
                             variant="destructive"
                             size="sm"
-                            onClick={handleDelete}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete()
+                            }
+                            }
                         >
                             Yes
                         </Button>
-                        </DialogClose>
+                    </DialogClose>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

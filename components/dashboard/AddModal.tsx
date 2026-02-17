@@ -22,6 +22,7 @@ import "react-day-picker/style.css";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "lucide-react";
 import Select from "react-select";
+import { useDayPicker } from "react-day-picker"
 
 const categoryOptions = [
     { value: "Fiction", label: "Fiction" },
@@ -50,6 +51,7 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
     const [bookName, setBookName] = useState("");
     const [author, setAuthor] = useState("");
     const [publishedOn, setPublishedOn] = useState<Date | undefined>();
+
     const [categories, setCategories] = useState<any[]>([]);
 
     const [calendarOpen, setcalendarOpen] = useState(false);
@@ -115,7 +117,28 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
         setOpen(false);
         resetForm();
     };
+    type FooterProps = {
+        setPublishedOn: (date: Date | undefined) => void;
+    };
+    function CalendarFooter({setPublishedOn }: FooterProps,
+    ) {
+        const { goToMonth } = useDayPicker();
 
+        const handleToday = () => {
+            const today = new Date();
+            setPublishedOn(today);
+            goToMonth(today);
+        };
+
+        return (
+            <button
+                className="text-sm text-blue-600 hover:underline"
+                onClick={handleToday}
+            >
+                Today
+            </button>
+        );
+    }
 
     return (
         <Dialog open={open} onOpenChange={(value) => {
@@ -160,10 +183,6 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
 
                     <div className="grid gap-1">
                         <Label htmlFor="publishedOn">Published On</Label>
-                        {/* <Input id="publishedOn"
-                            type="date"
-                            value={publishedOn}
-                            onChange={(e) => { setPublishedOn(e.target.value) }} /> */}
 
                         <Popover open={calendarOpen} onOpenChange={setcalendarOpen} >
                             <PopoverTrigger asChild >
@@ -186,6 +205,12 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
                                         setPublishedOn(date);
                                         setcalendarOpen(false);
                                     }}
+                                    footer={
+                                        <CalendarFooter
+                                            setPublishedOn={setPublishedOn}
+                                        // setcalendarOpen={setcalendarOpen}
+                                        />
+                                    }
                                 />
                             </PopoverContent>
                         </Popover>

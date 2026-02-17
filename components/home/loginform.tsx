@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
-import { login } from "@/app/store/authSlice";
+// import { login } from "@/app/store/authSlice";
 export default function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -17,9 +17,9 @@ export default function Login() {
     const isEmailValid = /\S+@\S+\.\S+/.test(email);
     const isFormValid = email!="" && password!="" && isEmailValid
     const handleLogin = () => {
-        document.cookie = `user=${email}; path=/`;
-        dispatch(login(email));
+        document.cookie = `user=${email}`;
         router.push("/dashboard");
+        // dispatch(login(email));
     }
 
     return (
