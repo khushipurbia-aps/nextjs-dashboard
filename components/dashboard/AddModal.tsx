@@ -200,6 +200,7 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
                                 <DayPicker
                                     animate
                                     mode="single"
+                                    required
                                     selected={publishedOn}
                                     onSelect={(date) => {
                                         setPublishedOn(date);
