@@ -5,7 +5,6 @@ import { useState } from "react";
 import { AppDispatch } from "@/app/store/store";
 import { useDispatch } from "react-redux";
 import { fetchBooks } from "@/app/store/bookSlice";
-import Select from "react-select";
 import { Label } from "@/components/ui/label"
 import {
     Card,
@@ -15,14 +14,8 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import Daypicker from "./DayPicker";
-const categoryOptions = [
-    { value: "Fiction", label: "Fiction" },
-    { value: "Non-Fiction", label: "Non-Fiction" },
-    { value: "Technology", label: "Technology" },
-    { value: "Self-Help", label: "Self-Help" },
-    { value: "Biography", label: "Biography" },
-    { value: "History", label: "History" },
-];
+import Reactselect from "./ReactSelect";
+
 export default function Filtermodal() {
     const [publishedOn, setPublishedOn] = useState<Date | undefined>(undefined);
     const [name, setName] = useState("");
@@ -71,12 +64,7 @@ export default function Filtermodal() {
 
                     <div className="space-y-1">
                         <Label>Book Category</Label>
-                        <Select
-                            isMulti
-                            options={categoryOptions}
-                            value={categories}
-                            onChange={(selected) => setCategories(selected as any[])}
-                        />
+                        <Reactselect categories={categories} setCategories={setCategories}/>
                     </div>
 
                     <div className="flex gap-2 justify-end">

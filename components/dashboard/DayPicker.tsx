@@ -37,14 +37,19 @@ function CalendarFooter({ setPublishedOn }: FooterProps,
 
 type DaypickerProps = {
     publishedOn: Date | undefined;
-    setPublishedOn: (date: Date | undefined) => void;
+    setPublishedOn: (date?: Date) => void;
 };
 
 export default function Daypicker({
     publishedOn,
     setPublishedOn,
 }: DaypickerProps) {
+
     const [calendarOpen, setcalendarOpen] = useState(false);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     return (
         <Popover open={calendarOpen} onOpenChange={setcalendarOpen}>
             <PopoverTrigger asChild>
@@ -67,6 +72,8 @@ export default function Daypicker({
                         setPublishedOn(date);
                         setcalendarOpen(false);
                     }}
+                    disabled={{ after: today }}
+                    captionLayout="dropdown"
                     footer={
                         <CalendarFooter
                             setPublishedOn={setPublishedOn}

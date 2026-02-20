@@ -35,9 +35,15 @@ export default function BooksTable({ bookId }: Props) {
         ? allBooks.filter((b) => b.id === bookId)
         : allBooks;
 
+
+    //Pagination
+    const [page, setPage] = useState(1);
+    const totalPages = useSelector(
+        (state: RootState) => state.books.totalPages
+    );
     useEffect(() => {
-        dispatch(fetchBooks({}));
-    }, [dispatch]);
+        dispatch(fetchBooks({ page }));
+    }, [dispatch, page]);
 
     const router = useRouter();
     const handleClick = (id: number) => {
@@ -56,6 +62,8 @@ export default function BooksTable({ bookId }: Props) {
             sortOrder: order,
         }));
     };
+
+
 
     return (
         <>
@@ -102,8 +110,9 @@ export default function BooksTable({ bookId }: Props) {
                                 if (!bookId) handleClick(book.id);
                             }}
                             key={book.id}>
-                        
-                            <TableCell>{index + 1}</TableCell>
+
+                            <TableCell>{(page - 1) * 10 + index + 1}</TableCell>
+
                             <TableCell>{book.bookName}</TableCell>
                             <TableCell>{book.author}</TableCell>
                             <TableCell>
@@ -127,6 +136,29 @@ export default function BooksTable({ bookId }: Props) {
                     ))}
                 </TableBody>
             </Table >
+            {!bookId && (
+                <div className="flex justify-between mt-4">
+                    <Button
+                        disabled={page === 1}
+                        onClick={() => setPage(prev => prev - 1)}
+                    >
+                        &lt; Previous
+                    </Button>
+
+                    <span>
+                        Page {page} of {totalPages}
+                    </span>
+
+                    <Button
+                        disabled={page === totalPages}
+                        onClick={() => setPage(prev => prev + 1)}
+                    >
+                        Next &gt;
+                    </Button>
+                </div>
+            )}
+
+
             <Addmodal open={open} setOpen={setOpen} bookToEditId={bookToEditId} />
         </>
 

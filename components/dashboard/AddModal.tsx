@@ -17,18 +17,10 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/app/store/store";
 import { addBook } from "@/app/store/bookSlice"
 import { AppDispatch } from "@/app/store/store"
-import Select from "react-select";
 import Daypicker from "./DayPicker"
+import Reactselect from "./ReactSelect"
 
-const categoryOptions = [
-    { value: "Fiction", label: "Fiction" },
-    { value: "Non-Fiction", label: "Non-Fiction" },
-    { value: "Technology", label: "Technology" },
-    { value: "Self-Help", label: "Self-Help" },
-    { value: "Biography", label: "Biography" },
-    { value: "History", label: "History" },
-];
-
+type CategoryOption = { value: string; label: string };
 interface AddModalProps {
     open: boolean
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -38,64 +30,62 @@ interface AddModalProps {
 export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps) {
     const bookToEdit = useSelector((state: RootState) => {
         if (!bookToEditId) return null;
-
         return state.books.booksList?.find(
             (b) => b?.id === bookToEditId
         ) || null;
     });
 
-    const [bookName, setBookName] = useState("");
-    const [author, setAuthor] = useState("");
-    const [publishedOn, setPublishedOn] = useState<Date | undefined>();
-    const [categories, setCategories] = useState<any[]>([]);
+    const [formData, setFormData] = useState({
+        bookName: "",
+        author: "",
+        publishedOn: undefined as Date | undefined,
+        categories: [] as CategoryOption[],
+    });
 
-    const resetForm = () => {
-        setBookName("");
-        setAuthor("");
-        setPublishedOn(undefined);
-        setCategories([])
-    };
+    const resetForm = () => setFormData({
+        bookName: "",
+        author: "",
+        publishedOn: undefined,
+        categories: [],
+    });
 
     useEffect(() => {
         if (bookToEdit) {
-            setBookName(bookToEdit.bookName);
-            setAuthor(bookToEdit.author);
-            setPublishedOn(new Date(bookToEdit.publishedOn));
-            setCategories(
-                bookToEdit.categories.map((c: string) => ({
-                    value: c,
-                    label: c,
-                }))
-            );
+            setFormData({
+                bookName: bookToEdit.bookName,
+                author: bookToEdit.author,
+                publishedOn: new Date(bookToEdit.publishedOn),
+                categories: bookToEdit.categories.map((c: string) => ({ value: c, label: c })),
+            });
         } else {
             resetForm();
         }
     }, [bookToEdit]);
 
     const dispatch = useDispatch<AppDispatch>();
-    const isFormValid = bookName && author && categories.length > 0 && publishedOn
-
+    const isFormValid = formData.bookName && formData.author && formData.categories.length > 0 && formData.publishedOn
+    
     const handleAdd = () => {
-        const formattedCategories = categories.map((c) => c.value);
-        if (!publishedOn) return;
+        const formattedCategories = formData.categories.map((c) => c.value);
+        if (!formData.publishedOn) return;
         const formattedDate =
-            `${publishedOn.getFullYear()}-
-        ${String(publishedOn.getMonth() + 1).padStart(2, "0")}-
-        ${String(publishedOn.getDate()).padStart(2, "0")}`;
+            `${formData.publishedOn.getFullYear()}-
+        ${String(formData.publishedOn.getMonth() + 1).padStart(2, "0")}-
+        ${String(formData.publishedOn.getDate()).padStart(2, "0")}`;
 
         if (bookToEdit) {
             dispatch(updateBook({
                 id: bookToEdit.id,
-                bookName,
-                author,
+                bookName: formData.bookName,
+                author: formData.author,
                 publishedOn: formattedDate,
                 categories: formattedCategories,
             }));
         }
         else dispatch(
             addBook({
-                bookName,
-                author,
+                bookName: formData.bookName,
+                author: formData.author,
                 publishedOn: formattedDate,
                 categories: formattedCategories,
             })
@@ -124,28 +114,28 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
                         <Label htmlFor="bookName">Book Name</Label>
                         <Input
                             id="bookName"
-                            value={bookName}
-                            onChange={(e) => { setBookName(e.target.value) }} />
+                            value={formData.bookName}
+                            onChange={(e) => { setFormData(prev => ({ ...prev, bookName: e.target.value })) }}
+                        />
                     </div>
                     <div className="grid gap-1">
                         <Label htmlFor="author">Author</Label>
                         <Input
                             id="author"
-                            value={author}
-                            onChange={(e) => { setAuthor(e.target.value) }} />
+                            value={formData.author}
+                            onChange={(e) => { setFormData(prev => ({ ...prev, author: e.target.value })) }} />
                     </div>
                     <div className="grid gap-1">
                         <Label>Book Category</Label>
-                        <Select
-                            isMulti
-                            options={categoryOptions}
-                            value={categories}
-                            onChange={(selected) => setCategories(selected as any[])}
-                        />
+                        <Reactselect categories={formData.categories} setCategories={(newCategories) =>
+                            setFormData(prev => ({ ...prev, categories: newCategories }))
+                        } />
                     </div>
                     <div className="grid gap-1">
                         <Label htmlFor="publishedOn">Published On</Label>
-                        <Daypicker publishedOn={publishedOn} setPublishedOn={setPublishedOn} />
+                        <Daypicker publishedOn={formData.publishedOn}
+                            setPublishedOn={(date) =>
+                                setFormData(prev => ({ ...prev, publishedOn: date }))} />
                     </div>
                 </div>
 

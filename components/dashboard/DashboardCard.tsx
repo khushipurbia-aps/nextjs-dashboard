@@ -16,7 +16,7 @@ export default function DashboardCard() {
     const params = useParams();
     const isDetailPage = params.id ? true : false;
     return (
-        <Card className="max-w-5xl">
+        <Card>
             <CardHeader>
                 <div className="flex justify-between ">
                     <CardTitle className="font-bold">Your Books</CardTitle>
@@ -29,7 +29,7 @@ export default function DashboardCard() {
 
                 <Addmodal open={open} setOpen={setOpen} />
             </CardHeader>
-            
+
             <CardContent>
                 <BooksTable />
             </CardContent>
