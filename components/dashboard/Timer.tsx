@@ -5,7 +5,6 @@ export default function Timer() {
   const [time, setTime] = useState(new Date());
   const [mounted, setMounted] = useState(false)
 
-
   useEffect(() => {
     setMounted(true);
     const interval = setInterval(() => {

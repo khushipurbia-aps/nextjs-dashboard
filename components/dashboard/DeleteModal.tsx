@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Trash2 } from "lucide-react";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { deleteBook } from "@/app/store/bookSlice";
 import { AppDispatch } from "@/app/store/store";
@@ -23,7 +22,7 @@ export default function Deletemodal({ id }: { id: number }) {
         dispatch(deleteBook(id))
         router.push("/dashboard");
     }
-
+    
     return (
         <Dialog>
             <DialogTrigger asChild>

@@ -17,19 +17,54 @@ const initialState: BooksState = {
 };
 
 
+// export const fetchBooks = createAsyncThunk(
+//   "books/fetchBooks",
+//   async () => {
+//     try {
+//       const res = await fetch("/api/books");
+//       if (!res.ok) {
+//         throw new Error("Failed to fetch books");
+//       }
+
+//       const data = await res.json();
+//       return data;
+//     }
+
+//     catch (error) {
+//       throw error;
+//     }
+//   }
+// );
+
 export const fetchBooks = createAsyncThunk(
   "books/fetchBooks",
-  async () => {
+  async ({ publishedOn, name, categories, sortBy,
+    sortOrder, }: {
+      publishedOn?: string; name?: string; categories?: string[]; sortBy?: "bookName" | "publishedOn";
+      sortOrder?: "asc" | "desc";
+    } = {}) => {
     try {
-      const res = await fetch("/api/books");
+      let url = "/api/books";
+      const params = new URLSearchParams();
+
+      if (publishedOn) params.append("publishedOn", publishedOn);
+      if (name) params.append("name", name);
+      if (categories && categories.length > 0) {
+        categories.forEach(c => params.append("categories", c));
+      }
+      if (sortBy) params.append("sortBy", sortBy);
+      if (sortOrder) params.append("sortOrder", sortOrder);
+
+      if (params.toString()) {
+        url = `/api/books?${params.toString()}`;
+      }
+      const res = await fetch(url);
       if (!res.ok) {
         throw new Error("Failed to fetch books");
       }
-
       const data = await res.json();
       return data;
     }
-
     catch (error) {
       throw error;
     }
