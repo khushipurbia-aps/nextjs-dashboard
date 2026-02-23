@@ -42,7 +42,9 @@ export default function BooksTable({ bookId }: Props) {
         (state: RootState) => state.books.totalPages
     );
     useEffect(() => {
-        dispatch(fetchBooks({ page }));
+        if(!bookId){
+            dispatch(fetchBooks({ page }));
+        }
     }, [dispatch, page]);
 
     const router = useRouter();

@@ -9,11 +9,27 @@ import { useRouter } from "next/navigation";
 export default function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState("")
     const router = useRouter()
 
     const isEmailValid = /\S+@\S+\.\S+/.test(email);
-    const isFormValid = email!="" && password!="" && isEmailValid
-    const handleLogin = () => {
+    const isFormValid = email != "" && password != "" && isEmailValid
+    const handleLogin = async () => {
+        const res = await fetch("/api/auth/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "appliation/json"
+                },
+                body: JSON.stringify({ email, password })
+            })
+
+        const data = await res.json();
+        if (!res.ok) {
+            setError(data.message)
+            return;
+        }
+        setError("")
         document.cookie = `user=${email}`;
         router.push("/dashboard");
     }
@@ -34,6 +50,11 @@ export default function Login() {
                         handleLogin();
                     }
                     }>
+                    {error && (
+                        <p className="text-red-500 text-sm">
+                            {error}
+                        </p>
+                    )}
                     <div className="flex flex-col gap-6">
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
@@ -41,10 +62,12 @@ export default function Login() {
                                 id="email"
                                 type="email"
                                 placeholder="m@example.com"
-                                onChange={(e) => setEmail(e.target.value)}
-                                className={ email!="" && !isEmailValid ? "border-red-600" : ""}
+                                onChange={(e) => {setEmail(e.target.value), 
+                                    setError("");
+                                }}
+                                className={email != "" && !isEmailValid ? "border-red-600" : ""}
                             />
-                            {email!="" && !isEmailValid && (
+                            {email != "" && !isEmailValid && (
                                 <p className="text-red-500 text-sm">Enter a valid Email</p>
                             )}
                         </div>
@@ -55,7 +78,9 @@ export default function Login() {
                             <Input
                                 id="password"
                                 type="password"
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={(e) => {setPassword(e.target.value),
+                                    setError("");
+                                }}
                             />
                         </div>
                     </div>
@@ -68,6 +93,13 @@ export default function Login() {
                     </Button>
                 </form>
             </CardContent>
+            <p className="text-center text-sm">
+                Don't have an account?{" "}
+                <button type="button" className="text-blue-600 hover:underline cursor-pointer"
+                    onClick={() => router.push("/signup")}>
+                    Sign Up
+                </button>
+            </p>
         </Card>
     );
 }

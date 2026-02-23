@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 
 import Addmodal from "./AddModal";
+import Importbooks from "./ImportBooks";
 export default function DashboardCard() {
     const [open, setOpen] = useState(false);
     const params = useParams();
@@ -26,7 +27,7 @@ export default function DashboardCard() {
                         </Button>
                     )}
                 </div>
-
+                <Importbooks/>
                 <Addmodal open={open} setOpen={setOpen} />
             </CardHeader>
 
