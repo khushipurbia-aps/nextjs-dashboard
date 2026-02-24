@@ -25,10 +25,6 @@ const authSlice = createSlice({
   name: "auths",
   initialState,
   reducers: {
-    // login: (state, action: PayloadAction<string>) => {
-    //   state.username = action.payload.split("@")[0];
-    //   localStorage.setItem("username", state.username)
-    // },
   },
   extraReducers: (builder) => {
     builder.addCase(userCookie.fulfilled, (state, action) => {
@@ -41,5 +37,4 @@ const authSlice = createSlice({
   },
 });
 
-// export const { login} = authSlice.actions;
 export default authSlice.reducer;

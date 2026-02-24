@@ -1,0 +1,17 @@
+"use client";
+
+import { Loader2 } from "lucide-react";
+
+interface SpinnerProps {
+  size?: number;
+  className?: string;
+}
+
+export default function Spinner({ size = 16, className = "" }: SpinnerProps) {
+  return (
+    <Loader2
+      className={`animate-spin ${className}`}
+      style={{ width: size, height: size }}
+    />
+  );
+}

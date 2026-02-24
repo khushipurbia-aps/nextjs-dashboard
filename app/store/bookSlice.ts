@@ -12,12 +12,14 @@ type BooksState = {
   booksList: Book[];
   totalBooks: number,
   totalPages: number
+  loading: Boolean
 };
 
 const initialState: BooksState = {
   booksList: [],
   totalPages: 1,
   totalBooks: 0,
+  loading: true
 };
 
 export const fetchBooks = createAsyncThunk(
@@ -36,7 +38,7 @@ export const fetchBooks = createAsyncThunk(
       let url = "/api/books";
       const params = new URLSearchParams();
 
-      params.append("page", String(page));  
+      params.append("page", String(page));
       if (publishedOn) params.append("publishedOn", publishedOn);
       if (name) params.append("name", name);
       if (categories && categories.length > 0) {
@@ -145,10 +147,17 @@ const booksSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      .addCase(fetchBooks.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(fetchBooks.fulfilled, (state, action) => {
+        state.loading = false;
         state.booksList = action.payload.books;
         state.totalPages = action.payload.totalPages;
         state.totalBooks = action.payload.totalBooks;
+      })
+      .addCase(fetchBooks.rejected, (state) => {
+        state.loading = false;
       })
       .addCase(addBook.fulfilled, (state, action) => {
         state.booksList.push(action.payload.book);

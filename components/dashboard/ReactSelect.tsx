@@ -1,3 +1,5 @@
+"use client"
+
 import Select from "react-select";
 
 type CategoryOption = { value: string; label: string };

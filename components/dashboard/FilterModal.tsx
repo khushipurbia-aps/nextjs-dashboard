@@ -14,7 +14,12 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import Daypicker from "./DayPicker";
-import Reactselect from "./ReactSelect";
+import dynamic from "next/dynamic";
+
+const Reactselect = dynamic(
+  () => import("./ReactSelect"),
+  { ssr: false }
+);
 
 export default function Filtermodal() {
     const [publishedOn, setPublishedOn] = useState<Date | undefined>(undefined);

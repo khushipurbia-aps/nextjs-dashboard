@@ -1,23 +1,58 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Papa from "papaparse";
 import { useDispatch } from "react-redux";
 import { fetchBooks } from "@/app/store/bookSlice";
 import { AppDispatch } from "@/app/store/store";
 
-export default function ImportBooks() {
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
+
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "../ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { UploadCloud } from "lucide-react"
+import Spinner from "./Spinner";
+
+
+interface ImportBooksProps {
+    open: boolean;
+    setOpen: (val: boolean) => void;
+    onSuccess: () => void;
+}
+
+export default function ImportBooks({ open, setOpen, onSuccess }: ImportBooksProps) {
     const [parsedData, setParsedData] = useState<any[]>([]);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [showConfirm, setShowConfirm] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [page, setPage] = useState(1);
 
     const dispatch = useDispatch<AppDispatch>();
     const requiredHeaders = ["bookName", "author", "categories", "publishedOn"];
 
-    const handleFile = (file: File) => {
+    const resetState = () => {
+        setParsedData([]);
+        setSelectedFile(null);
         setError(null);
+        setShowConfirm(false)
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        if (!open) {
+            resetState();
+        }
+    }, [open]);
+
+    const handleFile = (file: File) => {
+        resetState();
+        setSelectedFile(file);
         if (file.size > 2 * 1024 * 1024) {
             setError("File too large (Max 2MB)");
             return;
@@ -80,10 +115,9 @@ export default function ImportBooks() {
             if (!res.ok) {
                 throw new Error(data.error || "Import failed");
             }
-            alert("Books imported successfully");
-            setShowConfirm(false);
-            setParsedData([]);
-            dispatch(fetchBooks({ page }));
+            dispatch(fetchBooks({ page: 1 }));
+            setOpen(false)
+            onSuccess()
         } catch (err: any) {
             setError(err.message);
         } finally {
@@ -91,7 +125,11 @@ export default function ImportBooks() {
         }
     };
 
-    const { getRootProps, getInputProps } = useDropzone({
+    const handleCancel = () => {
+        resetState();
+    }
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
         accept: {
             "text/csv": [".csv"]
         },
@@ -103,45 +141,55 @@ export default function ImportBooks() {
     });
 
     return (
-        <div className="space-y-4">
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent onInteractOutside={(e) => e.preventDefault()} className="max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Import Books from CSV</DialogTitle>
+                </DialogHeader>
 
-            <div
-                {...getRootProps()}
-                className="border-2 border-dashed p-6 text-center cursor-pointer rounded-lg"
-            >
-                <input {...getInputProps()} />
-                <p>Drag & drop CSV here, or click to select</p>
-            </div>
 
-            {error && (
-                <p className="text-red-500">{error}</p>
-            )}
+                <div className="space-y-6">
+                    <Card
+                        {...getRootProps()}
+                        className={`border-2 border-dashed cursor-pointer transition-all duration-200 ${isDragActive ? "border-primary bg-primary/5" : "hover:border-primary/60"}`}>
+                        <CardContent className="flex flex-col items-center justify-center p-10 text-center space-y-4">
+                            <input {...getInputProps()} />
+                            <UploadCloud className="w-10 h-10 text-muted-foreground" />
+                            <div>
+                                <p className="font-medium">
+                                    Drag & drop your CSV file here
+                                </p>
+                                <p>
+                                    or click to browse (Max 2MB)
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
 
-            {showConfirm && (
-                <div className="p-4 border rounded-lg bg-gray-50">
-                    <p className="mb-2">
-                        {parsedData.length} books ready to import.
-                    </p>
-
-                    <div className="flex gap-3">
-                        <button
-                            onClick={() => setShowConfirm(false)}
-                            className="px-4 py-2 border rounded"
-                        >
-                            Cancel
-                        </button>
-
-                        <button
-                            onClick={handleConfirmImport}
-                            disabled={loading}
-                            className="px-4 py-2 bg-blue-600 text-white rounded"
-                        >
-                            {loading ? "Importing..." : "Confirm Import"}
-                        </button>
-                    </div>
+                    {selectedFile && (
+                        <p className="text-sm text-muted-foreground">
+                            Selected file: <span className="font-medium">{selectedFile.name}</span>
+                        </p>
+                    )}
+                    {error && (
+                        <Alert variant="destructive">
+                            <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                    )}
+                    {showConfirm && (
+                        <div className="flex justify-end gap-3">
+                            <Button variant="outline" onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                            <Button onClick={handleConfirmImport} disabled={loading}>
+                                {loading && <Spinner size={16} className="mr-2" />}
+                                {loading ? "Importing..." : "Confirm Import"}
+                            </Button>
+                        </div>
+                    )}
                 </div>
-            )}
 
-        </div>
+            </DialogContent>
+        </Dialog >
     );
 }

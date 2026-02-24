@@ -30,7 +30,6 @@ export default function Login() {
             return;
         }
         setError("")
-        document.cookie = `user=${email}`;
         router.push("/dashboard");
     }
 

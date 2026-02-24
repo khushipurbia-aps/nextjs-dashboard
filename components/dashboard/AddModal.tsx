@@ -18,7 +18,13 @@ import { RootState } from "@/app/store/store";
 import { addBook } from "@/app/store/bookSlice"
 import { AppDispatch } from "@/app/store/store"
 import Daypicker from "./DayPicker"
-import Reactselect from "./ReactSelect"
+import dynamic from "next/dynamic";
+import Spinner from "./Spinner";
+
+const Reactselect = dynamic(
+    () => import("./ReactSelect"),
+    { ssr: false }
+);
 
 type CategoryOption = { value: string; label: string };
 interface AddModalProps {
@@ -28,6 +34,7 @@ interface AddModalProps {
 }
 
 export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps) {
+    const [loading, setLoading] = useState(false);
     const bookToEdit = useSelector((state: RootState) => {
         if (!bookToEditId) return null;
         return state.books.booksList?.find(
@@ -64,35 +71,47 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
 
     const dispatch = useDispatch<AppDispatch>();
     const isFormValid = formData.bookName && formData.author && formData.categories.length > 0 && formData.publishedOn
-    
-    const handleAdd = () => {
+
+    const handleAdd = async () => {
+    if (!isFormValid || loading) return;
+    setLoading(true);
+
+    try {
         const formattedCategories = formData.categories.map((c) => c.value);
         if (!formData.publishedOn) return;
+
         const formattedDate =
-            `${formData.publishedOn.getFullYear()}-
-        ${String(formData.publishedOn.getMonth() + 1).padStart(2, "0")}-
-        ${String(formData.publishedOn.getDate()).padStart(2, "0")}`;
+            `${formData.publishedOn.getFullYear()}-${String(
+                formData.publishedOn.getMonth() + 1
+            ).padStart(2, "0")}-${String(
+                formData.publishedOn.getDate()
+            ).padStart(2, "0")}`;
 
         if (bookToEdit) {
-            dispatch(updateBook({
+            await dispatch(updateBook({
                 id: bookToEdit.id,
                 bookName: formData.bookName,
                 author: formData.author,
                 publishedOn: formattedDate,
                 categories: formattedCategories,
-            }));
-        }
-        else dispatch(
-            addBook({
+            })).unwrap();
+        } else {
+            await dispatch(addBook({
                 bookName: formData.bookName,
                 author: formData.author,
                 publishedOn: formattedDate,
                 categories: formattedCategories,
-            })
-        );
+            })).unwrap();
+        }
+
         setOpen(false);
         resetForm();
-    };
+    } catch (error) {
+        console.error(error);
+    } finally {
+        setLoading(false);
+    }
+};
 
     return (
         <Dialog open={open} onOpenChange={(value) => {
@@ -141,8 +160,20 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
 
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-                    <Button onClick={handleAdd} disabled={!isFormValid}>
-                        {bookToEdit ? "Save" : "Add"}
+                    <Button
+                        onClick={handleAdd}
+                        disabled={!isFormValid || loading}
+                        className="min-w-25"
+                    >
+                        {loading && <Spinner size={16} className="mr-2" />}
+
+                        {loading
+                            ? bookToEdit
+                                ? "Saving..."
+                                : "Adding..."
+                            : bookToEdit
+                                ? "Save"
+                                : "Add"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

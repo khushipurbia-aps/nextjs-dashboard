@@ -12,29 +12,45 @@ import { useState } from "react";
 
 import Addmodal from "./AddModal";
 import Importbooks from "./ImportBooks";
+import SuccessModal from "./SuccessModal";
+
 export default function DashboardCard() {
-    const [open, setOpen] = useState(false);
+    const [addOpen, setAddOpen] = useState(false);
+    const [importOpen, setImportOpen] = useState(false);
+    const [successOpen, setSuccessOpen] = useState(false);
     const params = useParams();
     const isDetailPage = params.id ? true : false;
     return (
-        <Card>
-            <CardHeader>
-                <div className="flex justify-between ">
-                    <CardTitle className="font-bold">Your Books</CardTitle>
-                    {!isDetailPage && (
-                        <Button onClick={() => setOpen(true)}>
-                            Add Book
-                        </Button>
-                    )}
-                </div>
-                <Importbooks/>
-                <Addmodal open={open} setOpen={setOpen} />
-            </CardHeader>
+        <>
+            <Card>
+                <CardHeader>
+                    <div className="flex justify-between items-center">
+                        <CardTitle className="font-bold text-xl">Your Books</CardTitle>
+                        {!isDetailPage && (
+                            <div className="flex gap-2">
+                                <Button variant="outline" onClick={() => setImportOpen(true)}>
+                                    Import CSV
+                                </Button>
+                                <Button onClick={() => setAddOpen(true)}>
+                                    Add Book
+                                </Button>
+                            </div>
 
-            <CardContent>
-                <BooksTable />
-            </CardContent>
-        </Card>
+                        )}
+                    </div>
+                </CardHeader>
+
+                <CardContent>
+                    <BooksTable />
+                </CardContent>
+            </Card>
+
+
+            <Addmodal open={addOpen} setOpen={setAddOpen} />
+            <Importbooks open={importOpen} setOpen={setImportOpen} onSuccess={() => setSuccessOpen(true)} />
+            <SuccessModal open={successOpen} setOpen={setSuccessOpen}/>
+
+        </>
 
     );
 
