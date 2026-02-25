@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { AppDispatch } from "@/app/store/store";
 import { useDispatch } from "react-redux";
@@ -13,13 +13,8 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import Daypicker from "./DayPicker";
-import dynamic from "next/dynamic";
-
-const Reactselect = dynamic(
-  () => import("./ReactSelect"),
-  { ssr: false }
-);
+import Daypicker from "@/components/common/DayPicker";
+import Reactselect from "@/components/common/ReactSelect";
 
 export default function Filtermodal() {
     const [publishedOn, setPublishedOn] = useState<Date | undefined>(undefined);

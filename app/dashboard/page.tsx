@@ -1,9 +1,9 @@
 
-import Header from "@/components/dashboard/Header"
-import DashboardCard from "@/components/dashboard/DashboardCard"
+import Header from "@/components/common/Header";
+import DashboardCard from "@/components/home/HomeView"
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import Filtermodal from "@/components/dashboard/FilterModal";
+import Filtermodal from "@/components/common/modals/FilterModal";
 
 export default async function dashboard() {
     const cookiestore = await cookies();

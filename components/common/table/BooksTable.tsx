@@ -7,26 +7,29 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import Deletemodal from "./DeleteModal";
-import Addmodal from "./AddModal";
+import Deletemodal from "../../common/modals/DeleteModal";
+import Addmodal from "../../common/modals/AddModal";
 import { useState, useEffect } from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useSelector, useDispatch } from "react-redux";
 import { Edit2 } from "lucide-react";
 import { RootState, AppDispatch } from "@/app/store/store";
 import { fetchBooks } from "@/app/store/bookSlice";
 import { useRouter } from "next/navigation";
 import { ChevronUp, ChevronDown } from "lucide-react";
-import Spinner from "./Spinner";
+import Spinner from "@/components/common/Spinner";
 
 type Props = {
     bookId?: number;
+      onEdit?: (id: number) => void;
 };
 
-export default function BooksTable({ bookId }: Props) {
+export default function BooksTable({ bookId, onEdit }: Props) {
     const [open, setOpen] = useState(false)
     const [bookToEditId, setBookToEditId] = useState<number | null>(null);
+
     const dispatch = useDispatch<AppDispatch>();
+    const [successOpen, setSuccessOpen] = useState(false);
 
     const allBooks = useSelector(
         (state: RootState) => state.books.booksList
@@ -147,8 +150,7 @@ export default function BooksTable({ bookId }: Props) {
                                     <Button
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            setBookToEditId(book.id);
-                                            setOpen(true);
+                                            onEdit?.(book.id);
                                         }}
                                     >
                                         <Edit2 />
@@ -187,6 +189,7 @@ export default function BooksTable({ bookId }: Props) {
             open={open}
             setOpen={setOpen}
             bookToEditId={bookToEditId}
+            onSuccess={() => setSuccessOpen(true)}
         />
     </>
 );

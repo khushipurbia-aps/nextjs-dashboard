@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card"
 
 import { useParams } from "next/navigation";
-import BooksTable from "@/components/dashboard/BooksTable";
+import BooksTable from "@/components/common/table/BooksTable";
 
 export default function BookDetails() {
     const params = useParams();

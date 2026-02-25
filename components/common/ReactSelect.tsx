@@ -1,6 +1,10 @@
 "use client"
+import dynamic from "next/dynamic";
 
-import Select from "react-select";
+const Select = dynamic(
+    () => import("react-select"),
+    { ssr: false }
+);
 
 type CategoryOption = { value: string; label: string };
 const categoryOptions: CategoryOption[] = [

@@ -17,23 +17,19 @@ import { useSelector } from "react-redux"
 import { RootState } from "@/app/store/store";
 import { addBook } from "@/app/store/bookSlice"
 import { AppDispatch } from "@/app/store/store"
-import Daypicker from "./DayPicker"
-import dynamic from "next/dynamic";
-import Spinner from "./Spinner";
-
-const Reactselect = dynamic(
-    () => import("./ReactSelect"),
-    { ssr: false }
-);
+import Daypicker from "@/components/common/DayPicker"
+import Reactselect from "@/components/common/ReactSelect"
+import Spinner from "@/components/common/Spinner"
 
 type CategoryOption = { value: string; label: string };
 interface AddModalProps {
     open: boolean
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
     bookToEditId?: number | null
+    onSuccess: () => void;
 }
 
-export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps) {
+export default function Addmodal({ open, setOpen, bookToEditId, onSuccess }: AddModalProps) {
     const [loading, setLoading] = useState(false);
     const bookToEdit = useSelector((state: RootState) => {
         if (!bookToEditId) return null;
@@ -106,6 +102,7 @@ export default function Addmodal({ open, setOpen, bookToEditId }: AddModalProps)
 
         setOpen(false);
         resetForm();
+        onSuccess();
     } catch (error) {
         console.error(error);
     } finally {

@@ -5,23 +5,27 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import BooksTable from "./BooksTable";
+import BooksTable from "../common/table/BooksTable";
 import { useParams } from "next/navigation";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-import Addmodal from "./AddModal";
-import Importbooks from "./ImportBooks";
-import SuccessModal from "./SuccessModal";
+import Addmodal from "../common/modals/AddModal";
+import Importbooks from "../common/modals/ImportBooksModal";
+import ExportButton from "../common/ExportButton";
+import SuccessModal from "../common/modals/SuccessModal";
+import { Toaster } from "sonner";
 
 export default function DashboardCard() {
     const [addOpen, setAddOpen] = useState(false);
+    const [editBookId, setEditBookId] = useState<number | null>(null);
     const [importOpen, setImportOpen] = useState(false);
     const [successOpen, setSuccessOpen] = useState(false);
     const params = useParams();
     const isDetailPage = params.id ? true : false;
     return (
         <>
+            <Toaster position="top-center" />
             <Card>
                 <CardHeader>
                     <div className="flex justify-between items-center">
@@ -31,6 +35,7 @@ export default function DashboardCard() {
                                 <Button variant="outline" onClick={() => setImportOpen(true)}>
                                     Import CSV
                                 </Button>
+                                <ExportButton />
                                 <Button onClick={() => setAddOpen(true)}>
                                     Add Book
                                 </Button>
@@ -41,14 +46,31 @@ export default function DashboardCard() {
                 </CardHeader>
 
                 <CardContent>
-                    <BooksTable />
+                    <BooksTable
+                        onEdit={(id) => {
+                            setEditBookId(id);
+                            setAddOpen(true);
+                        }}
+                    />
                 </CardContent>
             </Card>
 
+            <Addmodal
+                open={addOpen}
+                setOpen={(value) => {
+                    setAddOpen(value);
+                    if (!value) setEditBookId(null);
+                }}
+                bookToEditId={editBookId}
+                onSuccess={() => {
+                    if (!editBookId) setSuccessOpen(true);
 
-            <Addmodal open={addOpen} setOpen={setAddOpen} />
-            <Importbooks open={importOpen} setOpen={setImportOpen} onSuccess={() => setSuccessOpen(true)} />
-            <SuccessModal open={successOpen} setOpen={setSuccessOpen}/>
+                }}
+            />
+            <Importbooks open={importOpen} setOpen={setImportOpen}
+                onSuccess={() => setSuccessOpen(true)}
+            />
+            <SuccessModal open={successOpen} setOpen={setSuccessOpen} />
 
         </>
 

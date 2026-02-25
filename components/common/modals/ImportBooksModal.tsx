@@ -2,9 +2,6 @@
 import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Papa from "papaparse";
-import { useDispatch } from "react-redux";
-import { fetchBooks } from "@/app/store/bookSlice";
-import { AppDispatch } from "@/app/store/store";
 
 import {
     Dialog,
@@ -14,11 +11,10 @@ import {
 } from "@/components/ui/dialog"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { UploadCloud } from "lucide-react"
-import Spinner from "./Spinner";
-
+import Spinner from "@/components/common/Spinner";
 
 interface ImportBooksProps {
     open: boolean;
@@ -33,7 +29,6 @@ export default function ImportBooks({ open, setOpen, onSuccess }: ImportBooksPro
     const [showConfirm, setShowConfirm] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const dispatch = useDispatch<AppDispatch>();
     const requiredHeaders = ["bookName", "author", "categories", "publishedOn"];
 
     const resetState = () => {
@@ -43,7 +38,6 @@ export default function ImportBooks({ open, setOpen, onSuccess }: ImportBooksPro
         setShowConfirm(false)
         setLoading(false)
     }
-
     useEffect(() => {
         if (!open) {
             resetState();
@@ -115,7 +109,6 @@ export default function ImportBooks({ open, setOpen, onSuccess }: ImportBooksPro
             if (!res.ok) {
                 throw new Error(data.error || "Import failed");
             }
-            dispatch(fetchBooks({ page: 1 }));
             setOpen(false)
             onSuccess()
         } catch (err: any) {

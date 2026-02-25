@@ -13,6 +13,7 @@ type BooksState = {
   totalBooks: number,
   totalPages: number
   loading: Boolean
+  
 };
 
 const initialState: BooksState = {
