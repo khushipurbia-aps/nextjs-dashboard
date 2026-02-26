@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import InputWrapper from "../InputWrapper"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
@@ -69,46 +70,46 @@ export default function Addmodal({ open, setOpen, bookToEditId, onSuccess }: Add
     const isFormValid = formData.bookName && formData.author && formData.categories.length > 0 && formData.publishedOn
 
     const handleAdd = async () => {
-    if (!isFormValid || loading) return;
-    setLoading(true);
+        if (!isFormValid || loading) return;
+        setLoading(true);
 
-    try {
-        const formattedCategories = formData.categories.map((c) => c.value);
-        if (!formData.publishedOn) return;
+        try {
+            const formattedCategories = formData.categories.map((c) => c.value);
+            if (!formData.publishedOn) return;
 
-        const formattedDate =
-            `${formData.publishedOn.getFullYear()}-${String(
-                formData.publishedOn.getMonth() + 1
-            ).padStart(2, "0")}-${String(
-                formData.publishedOn.getDate()
-            ).padStart(2, "0")}`;
+            const formattedDate =
+                `${formData.publishedOn.getFullYear()}-${String(
+                    formData.publishedOn.getMonth() + 1
+                ).padStart(2, "0")}-${String(
+                    formData.publishedOn.getDate()
+                ).padStart(2, "0")}`;
 
-        if (bookToEdit) {
-            await dispatch(updateBook({
-                id: bookToEdit.id,
-                bookName: formData.bookName,
-                author: formData.author,
-                publishedOn: formattedDate,
-                categories: formattedCategories,
-            })).unwrap();
-        } else {
-            await dispatch(addBook({
-                bookName: formData.bookName,
-                author: formData.author,
-                publishedOn: formattedDate,
-                categories: formattedCategories,
-            })).unwrap();
+            if (bookToEdit) {
+                await dispatch(updateBook({
+                    id: bookToEdit.id,
+                    bookName: formData.bookName,
+                    author: formData.author,
+                    publishedOn: formattedDate,
+                    categories: formattedCategories,
+                })).unwrap();
+            } else {
+                await dispatch(addBook({
+                    bookName: formData.bookName,
+                    author: formData.author,
+                    publishedOn: formattedDate,
+                    categories: formattedCategories,
+                })).unwrap();
+            }
+
+            setOpen(false);
+            resetForm();
+            onSuccess();
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
         }
-
-        setOpen(false);
-        resetForm();
-        onSuccess();
-    } catch (error) {
-        console.error(error);
-    } finally {
-        setLoading(false);
-    }
-};
+    };
 
     return (
         <Dialog open={open} onOpenChange={(value) => {
@@ -128,7 +129,12 @@ export default function Addmodal({ open, setOpen, bookToEditId, onSuccess }: Add
                 <div className="grid gap-4 py-4">
                     <div className="grid gap-1">
                         <Label htmlFor="bookName">Book Name</Label>
-                        <Input
+                        {/* <Input
+                            id="bookName"
+                            value={formData.bookName}
+                            onChange={(e) => { setFormData(prev => ({ ...prev, bookName: e.target.value })) }}
+                        /> */}
+                        <InputWrapper
                             id="bookName"
                             value={formData.bookName}
                             onChange={(e) => { setFormData(prev => ({ ...prev, bookName: e.target.value })) }}
@@ -136,10 +142,15 @@ export default function Addmodal({ open, setOpen, bookToEditId, onSuccess }: Add
                     </div>
                     <div className="grid gap-1">
                         <Label htmlFor="author">Author</Label>
-                        <Input
+                        {/* <Input
                             id="author"
                             value={formData.author}
-                            onChange={(e) => { setFormData(prev => ({ ...prev, author: e.target.value })) }} />
+                            onChange={(e) => { setFormData(prev => ({ ...prev, author: e.target.value })) }} /> */}
+                        <InputWrapper
+                            id="author"
+                            value={formData.author}
+                            onChange={(e) => { setFormData(prev => ({ ...prev, author: e.target.value })) }}
+                        />
                     </div>
                     <div className="grid gap-1">
                         <Label>Book Category</Label>

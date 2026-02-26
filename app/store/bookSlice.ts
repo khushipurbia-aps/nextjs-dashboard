@@ -8,19 +8,26 @@ export type Book = {
   categories: string[];
 };
 
+type Filters = {
+  publishedOn?: string;
+  name?: string;
+  categories?: string[];
+}
+
 type BooksState = {
   booksList: Book[];
-  totalBooks: number,
-  totalPages: number
-  loading: Boolean
-  
+  totalBooks: number;
+  totalPages: number;
+  loading: boolean;
+  filters: Filters;
 };
 
 const initialState: BooksState = {
   booksList: [],
   totalPages: 1,
   totalBooks: 0,
-  loading: true
+  loading: true,
+  filters: {},
 };
 
 export const fetchBooks = createAsyncThunk(
@@ -144,7 +151,11 @@ export const updateBook = createAsyncThunk(
 const booksSlice = createSlice({
   name: "books",
   initialState,
-  reducers: {},
+  reducers: {
+    setFilters : (state,action)=>{
+        state.filters = action.payload;
+    }
+  },
 
   extraReducers: (builder) => {
     builder
@@ -179,4 +190,5 @@ const booksSlice = createSlice({
   }
 });
 
+export const {setFilters} = booksSlice.actions
 export default booksSlice.reducer;

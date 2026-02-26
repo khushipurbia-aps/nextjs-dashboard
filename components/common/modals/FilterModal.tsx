@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { AppDispatch } from "@/app/store/store";
 import { useDispatch } from "react-redux";
-import { fetchBooks } from "@/app/store/bookSlice";
+import { fetchBooks, setFilters } from "@/app/store/bookSlice";
 import { Label } from "@/components/ui/label"
 import {
     Card,
@@ -13,6 +13,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import InputWrapper from "../InputWrapper";
 import Daypicker from "@/components/common/DayPicker";
 import Reactselect from "@/components/common/ReactSelect";
 
@@ -24,18 +25,26 @@ export default function Filtermodal() {
     const dispatch = useDispatch<AppDispatch>();
 
     const handleFilter = () => {
-        const formattedDate = publishedOn
-            ? publishedOn.toISOString().split("T")[0]
+        const formattedDate = publishedOn ?
+            `${publishedOn.getFullYear()}-
+            ${String(publishedOn.getMonth() + 1).padStart(2, "0")}-
+            ${String(publishedOn.getDate()).padStart(2, "0")}`
             : undefined;
-
-        dispatch(fetchBooks({ publishedOn: formattedDate, name, categories: categories.map(c => c.value), }));
+        const appliedFilters = {
+            publishedOn: formattedDate,
+            name,
+            categories: categories.map((c) => c.value)
+        }
+        dispatch(setFilters(appliedFilters))
+        dispatch(fetchBooks({ page: 1, ...appliedFilters }));
     };
 
     const handleClear = () => {
         setPublishedOn(undefined);
         setName("")
         setCategories([])
-        dispatch(fetchBooks({}));
+        dispatch(setFilters({}));
+        dispatch(fetchBooks({ page: 1 }));
     };
 
 
@@ -55,16 +64,24 @@ export default function Filtermodal() {
 
                     <div className="space-y-1">
                         <Label>Search</Label>
-                        <Input
+                        {/* <Input
                             placeholder="Search by Name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
+                        /> */}
+                        <InputWrapper
+                            id="name"
+                            placeholder="Search by Name"
+                            value={name}
+                            onChange={(e) => {
+                                setName(e.target.value);
+                            }}
                         />
                     </div>
 
                     <div className="space-y-1">
                         <Label>Book Category</Label>
-                        <Reactselect categories={categories} setCategories={setCategories}/>
+                        <Reactselect categories={categories} setCategories={setCategories} />
                     </div>
 
                     <div className="flex gap-2 justify-end">

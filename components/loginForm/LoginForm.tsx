@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import InputWrapper from "../common/InputWrapper";
 export default function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -19,7 +20,7 @@ export default function Login() {
             {
                 method: "POST",
                 headers: {
-                    "Content-Type": "appliation/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ email, password })
             })
@@ -30,7 +31,7 @@ export default function Login() {
             return;
         }
         setError("")
-        router.push("/dashboard");
+        router.replace("/dashboard");
     }
 
     return (
@@ -57,7 +58,7 @@ export default function Login() {
                     <div className="flex flex-col gap-6">
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
-                            <Input
+                            {/* <Input
                                 id="email"
                                 type="email"
                                 placeholder="m@example.com"
@@ -65,6 +66,17 @@ export default function Login() {
                                     setError("");
                                 }}
                                 className={email != "" && !isEmailValid ? "border-red-600" : ""}
+                            /> */}
+                            <InputWrapper
+                                id="email"
+                                type="email"
+                                placeholder="m@example.com"
+                                value={email}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    setError("");
+                                }}
+                                error={email !== "" && !isEmailValid}
                             />
                             {email != "" && !isEmailValid && (
                                 <p className="text-red-500 text-sm">Enter a valid Email</p>
@@ -74,10 +86,20 @@ export default function Login() {
                             <div className="flex items-center">
                                 <Label htmlFor="password">Password</Label>
                             </div>
-                            <Input
+                            {/* <Input
                                 id="password"
                                 type="password"
-                                onChange={(e) => {setPassword(e.target.value),
+                                onChange={(e) => {
+                                    setPassword(e.target.value),
+                                        setError("");
+                                }}
+                            /> */}
+                            <InputWrapper
+                                id="password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
                                     setError("");
                                 }}
                             />

@@ -1,33 +1,21 @@
-"use client";
-
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import Login from "@/components/loginForm/LoginForm";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const cookieStore = await cookies();
+  const email = cookieStore.get("user")?.value;
 
-  const router = useRouter();
-  //for client-side
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const hasUser = document.cookie.includes("user=");
-      if (hasUser) {
-        router.push("/dashboard");
-      }
-    }
-  }, []);
+  if (email) {
+    redirect("/dashboard");
+  }
 
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center px-4"
-      style={{
-        backgroundImage:
-          "url('/bgimg2.jpg')",
-      }}
+      style={{ backgroundImage: "url('/bgimg2.jpg')" }}
     >
       <Login />
     </div>
-
   );
 }
-
