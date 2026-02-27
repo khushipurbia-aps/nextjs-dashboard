@@ -6,8 +6,9 @@ import {
     DialogTitle,
     DialogFooter
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+// import { Button } from "@/components/ui/button"
+import ButtonWrapper from "../ButtonWrapper"
+// import { Input } from "@/components/ui/input"
 import InputWrapper from "../InputWrapper"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
@@ -167,8 +168,9 @@ export default function Addmodal({ open, setOpen, bookToEditId, onSuccess }: Add
                 </div>
 
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-                    <Button
+                    {/* <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button> */}
+                    <ButtonWrapper variant="outline" onClick={()=>{setOpen(false)}}>Cancel</ButtonWrapper>
+                    {/* <Button
                         onClick={handleAdd}
                         disabled={!isFormValid || loading}
                         className="min-w-25"
@@ -182,7 +184,22 @@ export default function Addmodal({ open, setOpen, bookToEditId, onSuccess }: Add
                             : bookToEdit
                                 ? "Save"
                                 : "Add"}
-                    </Button>
+                    </Button> */}
+                    <ButtonWrapper
+                        onClick={handleAdd}
+                        disabled={!isFormValid || loading}
+                        className="min-w-25"
+                    >
+                        {loading && <Spinner size={16} className="mr-2" />}
+
+                        {loading
+                            ? bookToEdit
+                                ? "Saving..."
+                                : "Adding..."
+                            : bookToEdit
+                                ? "Save"
+                                : "Add"}
+                    </ButtonWrapper>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

@@ -10,7 +10,8 @@ import {
 import Deletemodal from "../../common/modals/DeleteModal";
 import Addmodal from "../../common/modals/AddModal";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
+import ButtonWrapper from "../ButtonWrapper";
 import { useSelector, useDispatch } from "react-redux";
 import { Edit2 } from "lucide-react";
 import { RootState, AppDispatch } from "@/app/store/store";
@@ -147,14 +148,22 @@ export default function BooksTable({ bookId, onEdit }: Props) {
 
                                     <TableCell>
                                         <Deletemodal id={book.id} />
-                                        <Button
+                                        {/* <Button
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 onEdit?.(book.id);
                                             }}
                                         >
                                             <Edit2 />
-                                        </Button>
+                                        </Button> */}
+                                        <ButtonWrapper
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onEdit?.(book.id);
+                                            }}
+                                        >
+                                            <Edit2 />
+                                        </ButtonWrapper>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -163,23 +172,36 @@ export default function BooksTable({ bookId, onEdit }: Props) {
 
                     {!bookId && (
                         <div className="flex justify-between mt-4">
-                            <Button
+                            {/* <Button
                                 disabled={page === 1}
                                 onClick={() => setPage(prev => prev - 1)}
                             >
                                 &lt; Previous
-                            </Button>
+                            </Button> */}
+                            <ButtonWrapper
+                                disabled={page === 1}
+                                onClick={() => setPage(prev => prev - 1)}
+                            >
+                                &lt; Previous
+                            </ButtonWrapper>
 
                             <span>
                                 Page {page} of {totalPages}
                             </span>
 
-                            <Button
+                            {/* <Button
                                 disabled={page === totalPages}
                                 onClick={() => setPage(prev => prev + 1)}
                             >
                                 Next &gt;
-                            </Button>
+                            </Button> */}
+                            <ButtonWrapper
+                                disabled={page === totalPages}
+                                onClick={() => setPage(prev => prev + 1)}
+                            >
+                                Next &gt;
+                            </ButtonWrapper>
+                            
                         </div>
                     )}
                 </>

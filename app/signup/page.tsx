@@ -1,6 +1,7 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+// import { Button } from "@/components/ui/button"
+import ButtonWrapper from "@/components/common/ButtonWrapper";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState, useEffect } from "react";
@@ -127,13 +128,20 @@ export default function Signup() {
                             </div>
                         </div>
 
-                        <Button
+                        {/* <Button
                             type="submit"
                             className="w-full"
                             disabled={!isFormValid}
                         >
                             Sign Up
-                        </Button>
+                        </Button> */}
+                        <ButtonWrapper
+                            type="submit"
+                            className="w-full"
+                            disabled={!isFormValid}
+                        >
+                            Sign Up
+                        </ButtonWrapper>
                     </form>
                 </CardContent>
                 <p className="text-center text-sm">
@@ -142,6 +150,7 @@ export default function Signup() {
                         onClick={() => router.push("/")}>
                         Login
                     </button>
+                    
                 </p>
             </Card>
         </div>

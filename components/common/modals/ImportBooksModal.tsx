@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/dialog"
 
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
+import ButtonWrapper from "../ButtonWrapper";
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { UploadCloud } from "lucide-react"
 import Spinner from "@/components/common/Spinner";
@@ -171,13 +172,20 @@ export default function ImportBooks({ open, setOpen, onSuccess }: ImportBooksPro
                     )}
                     {showConfirm && (
                         <div className="flex justify-end gap-3">
-                            <Button variant="outline" onClick={handleCancel}>
+                            {/* <Button variant="outline" onClick={handleCancel}>
                                 Cancel
-                            </Button>
-                            <Button onClick={handleConfirmImport} disabled={loading}>
+                            </Button> */}
+                            <ButtonWrapper variant="outline" onClick={handleCancel}>
+                                Cancel
+                            </ButtonWrapper>
+                            {/* <Button onClick={handleConfirmImport} disabled={loading}>
                                 {loading && <Spinner size={16} className="mr-2" />}
                                 {loading ? "Importing..." : "Confirm Import"}
-                            </Button>
+                            </Button> */}
+                            <ButtonWrapper onClick={handleConfirmImport} disabled={loading}>
+                                {loading && <Spinner size={16} className="mr-2" />}
+                                {loading ? "Importing..." : "Confirm Import"}
+                            </ButtonWrapper>
                         </div>
                     )}
                 </div>

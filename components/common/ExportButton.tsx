@@ -4,14 +4,17 @@ import { Book } from "@/app/store/bookSlice";
 import { useState } from "react";
 import { saveAs } from "file-saver";
 import Papa from "papaparse";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+// import { Button } from "@/components/ui/button";
+import ButtonWrapper from "./ButtonWrapper";
+// import { toast } from "sonner";
+import { useToast } from "./hooks/useToast";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store/store";
 
 export default function ExportButton() {
   const [loading, setLoading] = useState(false);
   const filters = useSelector((state: RootState) => state.books.filters);
+  const {showLoading, showSuccess, showError} = useToast();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -56,7 +59,8 @@ export default function ExportButton() {
   const handleExport = async () => {
     if (loading) return;
     setLoading(true);
-    toast.loading("Exporting books...", { id: "export" });
+    // toast.loading("Exporting books...", { id: "export" });
+    showLoading("Exporting Books...", "export" )
 
     try {
       const books = await fetchAllBooks();
@@ -74,11 +78,12 @@ export default function ExportButton() {
         type: "text/csv;charset=utf-8;",
       });
 
-      saveAs(blob, "books_export.csv");
-
-      toast.success("Books exported successfully!", { id: "export" });
+      saveAs(blob, "books_export.csv");                                
+      // toast.success("Books exported successfully!", { id: "export" });
+      showSuccess("Books exported successfully", "export")
     } catch (error) {
-      toast.error("Export failed", { id: "export" });
+      // toast.error("Export failed", { id: "export" });
+      showError("Export failed", "export")
       console.error(error);
     } finally {
       setLoading(false);
@@ -86,8 +91,11 @@ export default function ExportButton() {
   };
 
   return (
-    <Button onClick={handleExport} disabled={loading}>
+    // <Button onClick={handleExport} disabled={loading}>
+    //   {loading ? "Exporting..." : "Export"}
+    // </Button>
+    <ButtonWrapper onClick={handleExport} disabled={loading}>
       {loading ? "Exporting..." : "Export"}
-    </Button>
+    </ButtonWrapper>
   );
 }

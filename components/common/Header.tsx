@@ -1,6 +1,7 @@
 "use client";
 import Timer from "./Timer";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
+import ButtonWrapper from "./ButtonWrapper";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -20,9 +21,12 @@ export default function Header({ username }: Props) {
       <h1 className="text-2xl font-bold">
         Hi {username}, Welcome to your Dashboard
       </h1>
-      <Button onClick={handleLogout}>
+      {/* <Button onClick={handleLogout}>
         Logout
-      </Button>
+      </Button> */}
+      <ButtonWrapper onClick={handleLogout}>
+        Logout
+      </ButtonWrapper>
     </div>
   );
 }

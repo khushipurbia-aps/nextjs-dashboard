@@ -1,6 +1,7 @@
 "use client";
 
-import { Button } from "../ui/button";
+// import { Button } from "../ui/button";
+import ButtonWrapper from "./ButtonWrapper";
 import { useState } from "react";
 import { DayPicker } from "react-day-picker"
 import "react-day-picker/style.css";
@@ -8,6 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "lucide-react";
 
 import { useDayPicker } from "react-day-picker"
+
 
 type FooterProps = {
     setPublishedOn: (date: Date | undefined) => void;
@@ -23,12 +25,18 @@ function CalendarFooter({ setPublishedOn }: FooterProps,
     };
 
     return (
-        <button
+        // <button
+        //     className="text-sm text-blue-600 hover:underline"
+        //     onClick={handleToday}
+        // >
+        //     Today
+        // </button>
+        <ButtonWrapper
             className="text-sm text-blue-600 hover:underline"
             onClick={handleToday}
         >
             Today
-        </button>
+        </ButtonWrapper>
     );
 }
 
@@ -50,12 +58,18 @@ export default function Daypicker({
     return (
         <Popover open={calendarOpen} onOpenChange={setcalendarOpen}>
             <PopoverTrigger asChild>
-                <Button variant="outline" className="w-full justify-start font-normal">
+                {/* <Button variant="outline" className="w-full justify-start font-normal">
                     <Calendar className="mr-2 h-4 w-4" />
                     {publishedOn
                         ? publishedOn.toLocaleDateString("en-GB")
                         : "Pick a day"}
-                </Button>
+                </Button> */}
+                <ButtonWrapper variant="outline" className="w-full justify-start font-normal">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    {publishedOn
+                        ? publishedOn.toLocaleDateString("en-GB")
+                        : "Pick a day"}
+                </ButtonWrapper>
             </PopoverTrigger>
 
             <PopoverContent align="start"

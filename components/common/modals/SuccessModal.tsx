@@ -6,7 +6,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
+import ButtonWrapper from "../ButtonWrapper";
 import { fetchBooks } from "@/app/store/bookSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";
@@ -45,9 +46,12 @@ export default function SuccessModal({
                 </p>
 
                 <div className="flex justify-center">
-                    <Button onClick={handleOk}>
+                    {/* <Button onClick={handleOk}>
                         OK
-                    </Button>
+                    </Button> */}
+                    <ButtonWrapper onClick={handleOk}>
+                        OK
+                    </ButtonWrapper>
                 </div>
             </DialogContent>
         </Dialog>

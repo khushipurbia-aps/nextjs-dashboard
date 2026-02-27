@@ -1,8 +1,9 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardAction, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+// import { Button } from "@/components/ui/button"
+import ButtonWrapper from "../common/ButtonWrapper";
+// import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -105,13 +106,20 @@ export default function Login() {
                             />
                         </div>
                     </div>
-                    <Button
+                    {/* <Button
                         type="submit"
                         className="w-full"
                         disabled={!isFormValid}
                     >
                         Login
-                    </Button>
+                    </Button> */}
+                    <ButtonWrapper
+                        type="submit"
+                        className="w-full"
+                        disabled={!isFormValid}
+                    >
+                        Login
+                    </ButtonWrapper>
                 </form>
             </CardContent>
             <p className="text-center text-sm">

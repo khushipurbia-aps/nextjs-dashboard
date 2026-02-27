@@ -1,33 +1,37 @@
 "use client"
 
 import { Button } from "../ui/button";
-import React from "react";
+import { ReactNode } from "react";
 
 type ButtonWrapperProps = {
     type?: "button" | "submit";
     className?: string;
-    variant?: string;
-    size?: string;
-    onClick?: React.MouseEventHandler<HTMLButtonElement>;
+    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     disabled?: boolean
+    variant?: "default" | "outline" | "destructive";
+    size?: "xs" | "sm" | "lg";
+    children: ReactNode;
 };
 
-
 export default function ButtonWrapper({
-    type,
+    type = "button",
     className,
+    onClick,
+    disabled,
     variant,
     size,
-    onClick,
-    disabled
+    children
 }: ButtonWrapperProps) {
     return (
-    <Button
-    type={type}
-    className={className}
-    onClick={onClick}
-    disabled={disabled}
-    
-    />
+        <Button
+            type={type}
+            className={className}
+            onClick={onClick}
+            disabled={disabled}
+            variant={variant}
+            size={size}
+        >
+            {children}
+        </Button>
     );
 }

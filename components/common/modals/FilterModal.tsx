@@ -1,6 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
+import ButtonWrapper from "../ButtonWrapper";
 import { useState } from "react";
 import { AppDispatch } from "@/app/store/store";
 import { useDispatch } from "react-redux";
@@ -12,7 +13,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+// import { Input } from "@/components/ui/input" 
 import InputWrapper from "../InputWrapper";
 import Daypicker from "@/components/common/DayPicker";
 import Reactselect from "@/components/common/ReactSelect";
@@ -85,12 +86,18 @@ export default function Filtermodal() {
                     </div>
 
                     <div className="flex gap-2 justify-end">
-                        <Button variant="outline" onClick={handleClear}>
+                        {/* <Button variant="outline" onClick={handleClear}>
                             Clear
-                        </Button>
-                        <Button onClick={handleFilter}>
+                        </Button> */}
+                        <ButtonWrapper variant="outline" onClick={handleClear}>
+                            Clear
+                        </ButtonWrapper>
+                        {/* <Button onClick={handleFilter}>
                             Apply
-                        </Button>
+                        </Button> */}
+                        <ButtonWrapper onClick={handleFilter}>
+                            Apply
+                        </ButtonWrapper>
                     </div>
 
                 </div>

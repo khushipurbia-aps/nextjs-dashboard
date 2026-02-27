@@ -9,7 +9,8 @@ import {
     DialogFooter,
     DialogClose
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
+// import { Button } from "@/components/ui/button"
+import ButtonWrapper from "../ButtonWrapper";
 import { Trash2 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { deleteBook } from "@/app/store/bookSlice";
@@ -26,9 +27,12 @@ export default function Deletemodal({ id }: { id: number }) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button className="mr-4" onClick={(e) => e.stopPropagation()}>
+                {/* <Button className="mr-4" onClick={(e) => e.stopPropagation()}>
                     <Trash2 />
-                </Button>
+                </Button> */}
+                <ButtonWrapper className="mr-4" onClick={(e) => e.stopPropagation()}>
+                    <Trash2 />
+                </ButtonWrapper>
             </DialogTrigger>
             <DialogContent onInteractOutside={(e) => e.preventDefault()}>
                 <DialogHeader>
@@ -39,11 +43,12 @@ export default function Deletemodal({ id }: { id: number }) {
                 </DialogHeader>
                 <DialogFooter>
                     <DialogClose asChild>
-                        <Button variant="outline">No</Button>
+                        {/* <Button variant="outline">No</Button> */}
+                        <ButtonWrapper variant="outline">No</ButtonWrapper>
                     </DialogClose>
 
                     <DialogClose asChild>
-                        <Button
+                        {/* <Button
                             variant="destructive"
                             size="sm"
                             onClick={(e) => {
@@ -53,7 +58,18 @@ export default function Deletemodal({ id }: { id: number }) {
                             }
                         >
                             Yes
-                        </Button>
+                        </Button> */}
+                        <ButtonWrapper
+                            variant="destructive"
+                            size="sm"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDelete()
+                            }
+                            }
+                        >
+                            Yes
+                        </ButtonWrapper>
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

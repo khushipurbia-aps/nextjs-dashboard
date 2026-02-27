@@ -7,7 +7,8 @@ import {
 } from "@/components/ui/card"
 import BooksTable from "../common/table/BooksTable";
 import { useParams } from "next/navigation";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
+import ButtonWrapper from "../common/ButtonWrapper";
 import { useState } from "react";
 
 import Addmodal from "../common/modals/AddModal";
@@ -32,13 +33,19 @@ export default function DashboardCard() {
                         <CardTitle className="font-bold text-xl">Your Books</CardTitle>
                         {!isDetailPage && (
                             <div className="flex gap-2">
-                                <Button variant="outline" onClick={() => setImportOpen(true)}>
+                                {/* <Button variant="outline" onClick={() => setImportOpen(true)}>
                                     Import CSV
-                                </Button>
+                                </Button> */}
+                                <ButtonWrapper variant="outline" onClick={() => setImportOpen(true)}>
+                                    Import CSV
+                                </ButtonWrapper>
                                 <ExportButton />
-                                <Button onClick={() => setAddOpen(true)}>
+                                {/* <Button onClick={() => setAddOpen(true)}>
                                     Add Book
-                                </Button>
+                                </Button> */}
+                                <ButtonWrapper onClick={() => setAddOpen(true)}>
+                                    Add Book
+                                </ButtonWrapper>
                             </div>
 
                         )}
