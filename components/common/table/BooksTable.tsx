@@ -8,10 +8,10 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import Deletemodal from "../../common/modals/DeleteModal";
-import Addmodal from "../../common/modals/AddModal";
+import Addmodal from "../modals/AddModal/AddModal";
 import { useState, useEffect } from "react";
 // import { Button } from "@/components/ui/button";
-import ButtonWrapper from "../ButtonWrapper";
+import ButtonWrapper from "../ButtonWrapper/ButtonWrapper";
 import { useSelector, useDispatch } from "react-redux";
 import { Edit2 } from "lucide-react";
 import { RootState, AppDispatch } from "@/app/store/store";

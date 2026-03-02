@@ -8,10 +8,10 @@ import {
 import BooksTable from "../common/table/BooksTable";
 import { useParams } from "next/navigation";
 // import { Button } from "@/components/ui/button";
-import ButtonWrapper from "../common/ButtonWrapper";
+import ButtonWrapper from "../common/ButtonWrapper/ButtonWrapper";
 import { useState } from "react";
 
-import Addmodal from "../common/modals/AddModal";
+import Addmodal from "../common/modals/AddModal/AddModal";
 import Importbooks from "../common/modals/ImportBooksModal";
 import ExportButton from "../common/ExportButton";
 import SuccessModal from "../common/modals/SuccessModal";

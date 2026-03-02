@@ -1,12 +1,12 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 // import { Button } from "@/components/ui/button"
-import ButtonWrapper from "@/components/common/ButtonWrapper";
+import ButtonWrapper from "@/components/common/ButtonWrapper/ButtonWrapper";
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import InputWrapper from "@/components/common/InputWrapper";
+import InputWrapper from "@/components/common/InputWrapper/InputWrapper";
 export default function Signup() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")

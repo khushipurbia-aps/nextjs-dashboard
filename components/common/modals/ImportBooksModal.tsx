@@ -12,7 +12,7 @@ import {
 
 import { Card, CardContent } from "@/components/ui/card"
 // import { Button } from "@/components/ui/button";
-import ButtonWrapper from "../ButtonWrapper";
+import ButtonWrapper from "../ButtonWrapper/ButtonWrapper";
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { UploadCloud } from "lucide-react"
 import Spinner from "@/components/common/Spinner";

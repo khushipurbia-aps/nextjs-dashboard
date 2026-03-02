@@ -7,7 +7,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 // import { Button } from "@/components/ui/button";
-import ButtonWrapper from "../ButtonWrapper";
+import ButtonWrapper from "../ButtonWrapper/ButtonWrapper";
 import { fetchBooks } from "@/app/store/bookSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/app/store/store";

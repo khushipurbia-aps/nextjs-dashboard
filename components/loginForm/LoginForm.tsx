@@ -2,12 +2,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardAction, CardFooter } from "@/components/ui/card"
 // import { Button } from "@/components/ui/button"
-import ButtonWrapper from "../common/ButtonWrapper";
+import ButtonWrapper from "../common/ButtonWrapper/ButtonWrapper";
 // import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import InputWrapper from "../common/InputWrapper";
+import InputWrapper from "../common/InputWrapper/InputWrapper";
 export default function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")

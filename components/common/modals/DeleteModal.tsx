@@ -10,7 +10,7 @@ import {
     DialogClose
 } from "@/components/ui/dialog"
 // import { Button } from "@/components/ui/button"
-import ButtonWrapper from "../ButtonWrapper";
+import ButtonWrapper from "../ButtonWrapper/ButtonWrapper";
 import { Trash2 } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { deleteBook } from "@/app/store/bookSlice";

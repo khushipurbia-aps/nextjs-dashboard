@@ -1,7 +1,7 @@
 "use client";
 import Timer from "./Timer";
 // import { Button } from "@/components/ui/button";
-import ButtonWrapper from "./ButtonWrapper";
+import ButtonWrapper from "./ButtonWrapper/ButtonWrapper";
 import { useRouter } from "next/navigation";
 
 interface Props {

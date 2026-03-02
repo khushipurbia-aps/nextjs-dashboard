@@ -1,7 +1,7 @@
 "use client";
 
 // import { Button } from "@/components/ui/button";
-import ButtonWrapper from "../ButtonWrapper";
+import ButtonWrapper from "../ButtonWrapper/ButtonWrapper";
 import { useState } from "react";
 import { AppDispatch } from "@/app/store/store";
 import { useDispatch } from "react-redux";
@@ -14,7 +14,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 // import { Input } from "@/components/ui/input" 
-import InputWrapper from "../InputWrapper";
+import InputWrapper from "../InputWrapper/InputWrapper";
 import Daypicker from "@/components/common/DayPicker";
 import Reactselect from "@/components/common/ReactSelect";
 
