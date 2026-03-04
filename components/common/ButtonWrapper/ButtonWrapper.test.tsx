@@ -25,4 +25,14 @@ describe("ButtonWrapper", () => {
     fireEvent.click(button);
     expect(mockClick).not.toHaveBeenCalled();
   });
+
+it("renders as a Slot when asChild is true", () => {
+  render(
+    <ButtonWrapper asChild>
+        <div>Click Me</div>
+    </ButtonWrapper>
+  );
+    const div = screen.getByText("Click Me");
+    expect(div).toBeInTheDocument();
+});
 });

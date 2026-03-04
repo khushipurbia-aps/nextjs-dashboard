@@ -11,6 +11,7 @@ type ButtonWrapperProps = {
     variant?: "default" | "outline" | "destructive";
     size?: "xs" | "sm" | "lg";
     children: ReactNode;
+    asChild?: boolean;
 };
 
 export default function ButtonWrapper({
@@ -20,7 +21,8 @@ export default function ButtonWrapper({
     disabled,
     variant,
     size,
-    children
+    children,
+    asChild
 }: ButtonWrapperProps) {
     return (
         <Button
@@ -30,6 +32,7 @@ export default function ButtonWrapper({
             disabled={disabled}
             variant={variant}
             size={size}
+            asChild={asChild}
         >
             {children}
         </Button>
